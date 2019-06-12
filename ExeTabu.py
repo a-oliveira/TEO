@@ -9,15 +9,9 @@ import datetime
 from Agenda import Agenda
 def main():
     
-    hora = int(input())
-    minuto = int(input())
-    
-    data = datetime.time(hora,minuto)
-    agenda = Agenda(60)
-    
-    print(agenda.hashHora(data))
-    
-    
+    a = None
+    if a is None:
+        print("ok")
     
 
 if __name__ == "__main__":
