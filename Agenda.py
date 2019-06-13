@@ -1,5 +1,5 @@
 from random     import randint
-from datetime   import datetime, time
+from datetime   import time
 class Agenda():
     
     intervalos  = []
@@ -22,10 +22,12 @@ class Agenda():
         minuto  = randint(0,59)
         start   = time(hora, minuto)
         #calcula posicao no array de acordo com o horário de início
-        pos_ini = self.hashHora(start)
-        pos_fim = pos_ini + int((tarefa.duracao.hour*60 + tarefa.duracao.minute)/self.fracao)
-        i       = pos_ini
-        j       = pos_fim
+        posIni = self.hashHora(start)
+        posFim = posIni + self.hashHora(tarefa.duracao)
+        if posFim > (len(self.intervalos)-1):
+            posFim = posFim - len(self.intervalos)
+        i       = posIni
+        j       = posFim 
         aloca   = False
 
         #percorre do começo até o meio e do fim até o meio simultaneamente 
@@ -38,9 +40,9 @@ class Agenda():
             i = i+1
             j = j-1
         if aloca:
-            while pos_ini <= pos_fim:
-                self.intervalos[pos_ini].append(tarefa)
-                pos_ini = pos_ini + 1
+            while posIni <= posFim:
+                self.intervalos[posIni].append(tarefa)
+                posIni = posIni + 1
             return True
         else:
             self.agendarTarefa(tarefa)
@@ -57,6 +59,12 @@ class Agenda():
                     return True
                 else:
                     return False
+                
+    def imprimirIntervalos(self):
+        for i in range(len(self.intervalos)):
+            for j in range(len(self.intervalos[i])):
+                    if self.intervalos[i][j] is not None:
+                            print("Agenda[",i,"]","[",j,"] = ", self.intervalos[i][j].recuperaTipo())
 
 ''' def _atrasarHorario(self,horarioAtual,tempoAtraso):
         horario = horarioAtual.hour
