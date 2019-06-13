@@ -41,8 +41,12 @@ class Agenda():
             j = j-1
         if aloca:
             while posIni <= posFim:
-                self.intervalos[posIni].append(tarefa)
-                posIni = posIni + 1
+                if self.intervalos[posIni][0] is None:
+                    self.intervalos[posIni][0] = tarefa                    
+                else:
+                    self.intervalos[posIni].append(tarefa)
+                posIni = posIni + 1                    
+                
             return True
         else:
             self.agendarTarefa(tarefa)
