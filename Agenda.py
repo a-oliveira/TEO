@@ -24,34 +24,65 @@ class Agenda():
         #calcula posicao no array de acordo com o horário de início
         posIni = self.hashHora(start)
         posFim = posIni + self.hashHora(tarefa.duracao)
+        #se o tempo final extrapolar o final da agenda, significa q sera no dia seguinte
         if posFim > (len(self.intervalos)-1):
             posFim = posFim - len(self.intervalos)
-        i       = posIni
-        j       = posFim 
-        aloca   = False
+        aloca   = self.verificaIntervalo(posIni,posFim,tarefa.recuperaTipo())
+        
+        if aloca:
+            self.alocarTarefa(posIni,posFim,tarefa)                
+            return True
+        else:
+            posEst = self.hashHora(tarefa.est)
+            posLst = self.hashHora(tarefa.lst)
+            #tenta atrasar a tarefa
+            for i in range(posIni,posLst):
+                if not(self.choqueDeTarefas(i,tarefa.recuperaTipo())):
+                    novoIni = i
+                    novoFim = i + self.hashHora(tarefa.duracao)
+                    if novoFim > len(self.intervalos):
+                        novoFim = novoFim - len(self.intervalos)
+                    aloca = self.verificaIntervalo(novoIni,novoFim)
+                    if aloca:
+                        self.alocarTarefa(novoIni,novoFim,tarefa)
+                        return True
+            #tenta adiantar a tarefa
+            for i in range(posEst,posIni):
+                if not(self.choqueDeTarefas(i,tarefa.recuperaTipo())):
+                    novoIni = i
+                    novoFim = i + self.hashHora(tarefa.duracao)
+                    if novoFim > len(self.intervalos):
+                        novoFim = novoFim - len(self.intervalos)
+                    aloca = self.verificaIntervalo(novoIni,novoFim)
+                    if aloca:
+                        self.alocarTarefa(novoIni,novoFim,tarefa)
+                        return True
+            return False
+                    
 
+    def verificaIntervalo(self,inicio,fim,tipoTarefa):
         #percorre do começo até o meio e do fim até o meio simultaneamente 
         #pra verificar se nesse intervalo existem tarefas conflitantes
+        aloca = False
+        i = inicio
+        j = fim
         while i < j:
-            if not(self.choqueDeTarefas(i, tarefa.recuperaTipo())) and not(self.choqueDeTarefas(j, tarefa.recuperaTipo())):
+            if not(self.choqueDeTarefas(i, tipoTarefa)) and not(self.choqueDeTarefas(j,tipoTarefa)):
                 aloca = True
             else:
                 aloca = False
             i = i+1
             j = j-1
-        if aloca:
-            while posIni <= posFim:
-                if self.intervalos[posIni][0] is None:
-                    self.intervalos[posIni][0] = tarefa                    
-                else:
-                    self.intervalos[posIni].append(tarefa)
-                posIni = posIni + 1                    
-                
-            return True
-        else:
-            self.agendarTarefa(tarefa)
-            #return False
+        return aloca
     
+    def alocarTarefa(self,inicio,fim,tarefa):
+        while inicio <= fim:            
+            if self.intervalos[inicio][0] is None:
+                self.intervalos[inicio][0] = tarefa                    
+            else:
+                self.intervalos[inicio].append(tarefa)
+            inicio = inicio + 1
+        return True
     def agendar(self,tarefas):
         for tarefa in tarefas:
             self.agendarTarefa(tarefa)
