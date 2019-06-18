@@ -24,12 +24,16 @@ class Modelador():
                 horarios = self._gerarHorariosAleatorios(False)
             duracao = datetime.time(randint(1,3),0)
             tarefa = Tarefa(horarios.get("EST"),horarios.get("LST"),horarios.get("RST"),duracao)
-            dispositivo = Dispositivo(self.tiposIniciais[randint(0,len(self.tiposIniciais)-1)],0)
+            dispositivo = Dispositivo(self.tiposIniciais[randint(0,len(self.tiposIniciais)-1)],1)
             tarefa.definirDispositivo(dispositivo)
             tarefas.append(tarefa)
         
         agenda.agendar(tarefas)
+        self._definirCustoAleatoriamente(agenda.custos)
+        print(agenda.custos)
         agenda.imprimirIntervalos()
+        return agenda
+    
         
     def _gerarHorariosAleatorios(self,flagHora):
         horaEst = randint(0,22)
@@ -55,6 +59,19 @@ class Modelador():
         retorno.update({"LST":lst})
         retorno.update({"RST":rst})        
         return retorno
+    
+    def _definirCustoAleatoriamente(self,arrayCusto):
+        contador = 0
+        while contador < len(arrayCusto):
+            intervalo = randint(1,5)
+            valorIntervalo = randint(5,15)
+            for i in range(intervalo):
+                if (i+contador) > len(arrayCusto):
+                    break
+                else:
+                    arrayCusto[contador] = valorIntervalo
+                    contador = contador + 1
+            
                 
         
         

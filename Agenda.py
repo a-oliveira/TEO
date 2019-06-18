@@ -4,10 +4,12 @@ class Agenda():
     
     intervalos  = []
     fracao      = 0
+    custos      = []
     
     def __init__(self,fracao):
         for i in range(int((24*60)/fracao)):
             self.intervalos.append([None])
+            self.custos.append(None)
         self.fracao = fracao
         
     def hashHora(self,horario):
@@ -42,7 +44,7 @@ class Agenda():
                     novoFim = i + self.hashHora(tarefa.duracao)
                     if novoFim > len(self.intervalos):
                         novoFim = novoFim - len(self.intervalos)
-                    aloca = self.verificaIntervalo(novoIni,novoFim)
+                    aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         return True
@@ -53,7 +55,7 @@ class Agenda():
                     novoFim = i + self.hashHora(tarefa.duracao)
                     if novoFim > len(self.intervalos):
                         novoFim = novoFim - len(self.intervalos)
-                    aloca = self.verificaIntervalo(novoIni,novoFim)
+                    aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         return True
@@ -83,6 +85,7 @@ class Agenda():
                 self.intervalos[inicio].append(tarefa)
             inicio = inicio + 1
         return True
+    
     def agendar(self,tarefas):
         for tarefa in tarefas:
             self.agendarTarefa(tarefa)
@@ -101,14 +104,5 @@ class Agenda():
                     if self.intervalos[i][j] is not None:
                             print("Agenda[",i,"]","[",j,"] = ", self.intervalos[i][j].recuperaTipo())
 
-''' def _atrasarHorario(self,horarioAtual,tempoAtraso):
-        horario = horarioAtual.hour
-        return horario + tempoAtraso
-    
-    def _adiantarHorario(self,horarioAtual,tempoAdianto):
-        horario = horarioAtual.hour
-        return horario - tempoAdianto'''
-
-                            
                 
         
