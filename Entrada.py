@@ -34,4 +34,4 @@ class DadosEntrada():
             tarefas.append(novaTarefa)'''
             #print("Nova tarefa EST = " + str(novaTarefa.est) + '\n' + "Dispositivo = " + novaTarefa.dispositivo.consumo)
             print(linha)
-            return tarefas
+        return tarefas
