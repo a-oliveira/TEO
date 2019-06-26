@@ -1,0 +1,2 @@
+secar-roupa	10:00:00	12:00:00	12:00:00	02:00:00	1	<class 'Dispositivos.Dispositivo'>
+passar-roupa	17:00:00	19:00:00	20:00:00	02:00:00	1	<class 'Dispositivos.Dispositivo'>

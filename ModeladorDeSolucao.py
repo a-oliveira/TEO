@@ -28,11 +28,21 @@ class Modelador():
             tarefa.definirDispositivo(dispositivo)
             tarefas.append(tarefa)
         
-        agenda.agendar(tarefas)
+        arquivo = open("dadosEntrada.txt", "w")
+        #arquivo.write('TAREFA' + '\t\t' + 'EST' + '\t\t' + 'RST' + '\t\t' + 'LST' + '\t\t' + 'DURACÃO' +  '\t' + 'CONSUMO_DISP' + '\t' + 'CATEGORIA_DISP' '\n')
+        for tarefa in tarefas:
+            dadosTarefa = tarefa.recuperaTipo() + '\t' + str(tarefa.est) + '\t' + str(tarefa.rst) + '\t' + str(tarefa.lst) + '\t' + str(tarefa.duracao)            
+            dadosDispositivo = '\t'+ str(tarefa.dispositivo.consumo) + '\t' + str(type(tarefa.dispositivo)) + '\n'
+            dados =  dadosTarefa + dadosDispositivo
+            arquivo.writelines(dados)
+        
+        arquivo.close()
+        
+        '''agenda.agendar(tarefas)
         self._definirCustoAleatoriamente(agenda.custos)
         print(agenda.custos)
         agenda.imprimirIntervalos()
-        return agenda
+        return agenda'''
     
         
     def _gerarHorariosAleatorios(self,flagHora):
