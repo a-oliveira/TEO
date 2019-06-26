@@ -7,15 +7,13 @@ Created on Tue Jun 11 22:26:54 2019
 from random          import randint
 import datetime
 from Tarefas         import Tarefa
-from Agenda          import Agenda
 from Dispositivos    import Dispositivo
 from DispositivoHVAC import DispositivoHVAC
 class Modelador():
     
     tiposIniciais = ["lavar-roupa","passar-roupa","secar-roupa","lavar-louça","jogar-truco"]
     
-    def gerarDadosIniciais(self,fracaoDesejada,qntTarefas):
-        agenda = Agenda(fracaoDesejada)
+    def gerarDadosIniciais(self,fracaoDesejada,qntTarefas):   
         tarefas = []
         for i in range(qntTarefas):
             tarefa = None
@@ -29,29 +27,20 @@ class Modelador():
             tarefa.definirDispositivo(dispositivo)
             tarefas.append(tarefa)
         
-        arquivo = open("dadosEntrada.txt", "w")
+        arquivo = open("dadosEntrada2.txt", "w")
         
         for tarefa in tarefas:
-            dadosTarefa = tarefa.recuperaTipo() + '\t' + str(tarefa.est) + '\t' + str(tarefa.rst) + '\t' + str(tarefa.lst) + '\t' + str(tarefa.duracao) + '\t' + str(type(tarefa.dispositivo))        
-            dadosDispositivo = '\t' + str(tarefa.dispositivo.consumo) + '\n'
+            dadosTarefa = str(tarefa.est) + '\t' + str(tarefa.rst) + '\t' + str(tarefa.lst) + '\t' + str(tarefa.duracao) + '\t' + tarefa.recuperaTipo()        
             
-            #SUBSTITUIR CLASSE HVAC POR UM OBJETO DA CLASSE ***
-            hvac             = '\t' + str(DispositivoHVAC.resTermica) + '\t' + str(DispositivoHVAC.tempIn) + '\t' + str(DispositivoHVAC.tempOut) + '\t' + str(DispositivoHVAC.capTermica) + '\n' 
-            
-            if type(tarefa.dispositivo) == "<class 'DispositivoHVAC.DispositivoHVAC'>":
+            if tarefa.dispositivo.tipo == "HVAC":
+                hvac = '\t' + str(DispositivoHVAC.resTermica) + '\t' + str(DispositivoHVAC.tempIn) + '\t' + str(DispositivoHVAC.tempOut) + '\t' + str(DispositivoHVAC.capTermica) + '\n'
                 dados = dadosTarefa + hvac
             else:
-                dados = dadosTarefa + dadosDispositivo
+                dados = dadosTarefa + '\t' + str(tarefa.dispositivo.consumo) + '\n'
+            
             arquivo.writelines(dados)
         
         arquivo.close()
-        
-        '''agenda.agendar(tarefas)
-        self._definirCustoAleatoriamente(agenda.custos)
-        print(agenda.custos)
-        agenda.imprimirIntervalos()
-        return agenda'''
-    
         
     def _gerarHorariosAleatorios(self,flagHora):
         horaEst = randint(0,22)
@@ -78,7 +67,7 @@ class Modelador():
         retorno.update({"RST":rst})        
         return retorno
     
-    def _definirCustoAleatoriamente(self,arrayCusto):
+    def definirCustoAleatoriamente(self,arrayCusto):
         contador = 0
         while contador < len(arrayCusto):
             intervalo = randint(1,5)

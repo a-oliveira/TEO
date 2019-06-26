@@ -1,6 +1,5 @@
 from ModeladorDeSolucao import Modelador
 from Agenda             import Agenda
-from Dispositivos       import Dispositivo
 from Entrada            import DadosEntrada
 
 
@@ -15,16 +14,16 @@ def calcularCustoAgenda(agenda):
 
 
 def main():
+    model = Modelador()
+#   model.gerarDadosIniciais(60,6)
+    entradaDados = DadosEntrada()
+    tarefas      = entradaDados.lerArquivo("dadosEntrada2.txt")
 
-#    model = Modelador()
-#    agenda = model.gerarDadosIniciais(60,2)
-#    print(calcularCustoAgenda(agenda))
+    agenda = Agenda(60)
+    model.definirCustoAleatoriamente(agenda.custos)
+    agenda.agendar(tarefas)
     
-    teste = DadosEntrada()
-    print(len(teste.lerArquivo()))
+    agenda.imprimirIntervalos()
     
-    
-    
-
 if __name__ == "__main__":
-    main()
+    main()    
