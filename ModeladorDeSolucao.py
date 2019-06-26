@@ -4,11 +4,12 @@ Created on Tue Jun 11 22:26:54 2019
 
 @author: thiag
 """
-from random import randint
+from random          import randint
 import datetime
-from Tarefas import Tarefa
-from Agenda import Agenda
-from Dispositivos import Dispositivo
+from Tarefas         import Tarefa
+from Agenda          import Agenda
+from Dispositivos    import Dispositivo
+from DispositivoHVAC import DispositivoHVAC
 class Modelador():
     
     tiposIniciais = ["lavar-roupa","passar-roupa","secar-roupa","lavar-louça","jogar-truco"]
@@ -29,11 +30,18 @@ class Modelador():
             tarefas.append(tarefa)
         
         arquivo = open("dadosEntrada.txt", "w")
-        #arquivo.write('TAREFA' + '\t\t' + 'EST' + '\t\t' + 'RST' + '\t\t' + 'LST' + '\t\t' + 'DURACÃO' +  '\t' + 'CONSUMO_DISP' + '\t' + 'CATEGORIA_DISP' '\n')
+        
         for tarefa in tarefas:
-            dadosTarefa = tarefa.recuperaTipo() + '\t' + str(tarefa.est) + '\t' + str(tarefa.rst) + '\t' + str(tarefa.lst) + '\t' + str(tarefa.duracao)            
-            dadosDispositivo = '\t'+ str(tarefa.dispositivo.consumo) + '\t' + str(type(tarefa.dispositivo)) + '\n'
-            dados =  dadosTarefa + dadosDispositivo
+            dadosTarefa = tarefa.recuperaTipo() + '\t' + str(tarefa.est) + '\t' + str(tarefa.rst) + '\t' + str(tarefa.lst) + '\t' + str(tarefa.duracao) + '\t' + str(type(tarefa.dispositivo))        
+            dadosDispositivo = '\t' + str(tarefa.dispositivo.consumo) + '\n'
+            
+            #SUBSTITUIR CLASSE HVAC POR UM OBJETO DA CLASSE ***
+            hvac             = '\t' + str(DispositivoHVAC.resTermica) + '\t' + str(DispositivoHVAC.tempIn) + '\t' + str(DispositivoHVAC.tempOut) + '\t' + str(DispositivoHVAC.capTermica) + '\n' 
+            
+            if type(tarefa.dispositivo) == "<class 'DispositivoHVAC.DispositivoHVAC'>":
+                dados = dadosTarefa + hvac
+            else:
+                dados = dadosTarefa + dadosDispositivo
             arquivo.writelines(dados)
         
         arquivo.close()
