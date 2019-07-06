@@ -1,5 +1,6 @@
 from random     import randint
-from datetime   import time
+import datetime
+
 class Agenda():
     
     intervalos  = []
@@ -22,7 +23,7 @@ class Agenda():
         #define horário de início aleatoriamente
         hora    = randint(tarefa.est.hour,tarefa.lst.hour)
         minuto  = randint(0,59)
-        start   = time(hora, minuto)
+        start   = datetime.time(hora, minuto)
         #calcula posicao no array de acordo com o horário de início
         posIni = self.hashHora(start)
         posFim = posIni + self.hashHora(tarefa.duracao)
@@ -32,7 +33,8 @@ class Agenda():
         aloca   = self.verificaIntervalo(posIni,posFim,tarefa.recuperaTipo())
         
         if aloca:
-            self.alocarTarefa(posIni,posFim,tarefa)                
+            tarefa.start = start
+            self.alocarTarefa(posIni,posFim,tarefa)               
             return True
         else:
             posEst = self.hashHora(tarefa.est)
@@ -46,6 +48,7 @@ class Agenda():
                         novoFim = novoFim - len(self.intervalos)
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
+                        tarefa.start = start
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         return True
             #tenta adiantar a tarefa
@@ -57,6 +60,7 @@ class Agenda():
                         novoFim = novoFim - len(self.intervalos)
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
+                        tarefa.start = start
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         return True
             return False
@@ -76,6 +80,15 @@ class Agenda():
             i = i+1
             j = j-1
         return aloca
+    
+    def removerTarefa(self,inicio,fim,tipoDispositivo):
+        for contador in range(inicio,fim+1):
+            for tarefa in self.intervalos[contador]:
+                if tarefa.recuperaTipo() == tipoDispositivo:
+                    removerTarefa = tarefa
+                    break
+            self.intervalos[contador].remove(removerTarefa)
+        
     
     def alocarTarefa(self,inicio,fim,tarefa):
         while inicio <= fim:            
