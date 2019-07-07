@@ -6,6 +6,7 @@ class Agenda():
     intervalos  = []
     fracao      = 0
     custos      = []
+    totalTarefas = 0
     
     def __init__(self,fracao):
         for i in range(int((24*60)/fracao)):
@@ -34,7 +35,9 @@ class Agenda():
         
         if aloca:
             tarefa.start = start
-            self.alocarTarefa(posIni,posFim,tarefa)               
+            tarefa.definirID = self.totalTarefas
+            self.alocarTarefa(posIni,posFim,tarefa) 
+            self.totalTarefas += 1              
             return True
         else:
             posEst = self.hashHora(tarefa.est)
@@ -49,7 +52,9 @@ class Agenda():
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         tarefa.start = start
+                        tarefa.definirID = self.totalTarefas
                         self.alocarTarefa(novoIni,novoFim,tarefa)
+                        self.totalTarefas += 1  
                         return True
             #tenta adiantar a tarefa
             for i in range(posEst,posIni):
@@ -61,7 +66,9 @@ class Agenda():
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         tarefa.start = start
+                        tarefa.definirID = self.totalTarefas
                         self.alocarTarefa(novoIni,novoFim,tarefa)
+                        self.totalTarefas += 1  
                         return True
             return False
                     
@@ -81,13 +88,22 @@ class Agenda():
             j = j-1
         return aloca
     
-    def removerTarefa(self,inicio,fim,tipoDispositivo):
+    def verificarHorario(self,intervalo,ID):
+        posTarefa = 0
+        for tarefa in self.intervalos[intervalo]:
+            if tarefa.ID == ID:
+                return posTarefa
+            else:
+                posTarefa += 1
+        return -1
+    
+    def removerTarefa(self,inicio,fim,ID):
         for contador in range(inicio,fim+1):
             for tarefa in self.intervalos[contador]:
-                if tarefa.recuperaTipo() == tipoDispositivo:
-                    removerTarefa = tarefa
+                if tarefa.ID == ID:
+                    tarefaToDel = tarefa
                     break
-            self.intervalos[contador].remove(removerTarefa)
+            self.intervalos[contador].remove(tarefaToDel)
         
     
     def alocarTarefa(self,inicio,fim,tarefa):

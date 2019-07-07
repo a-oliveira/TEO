@@ -14,6 +14,45 @@ def calcularCustoAgenda(agenda):
                 custoTotal = custoTotal + custoTarefa
     return custoTotal
 
+def gerarVizinhanca(agenda):
+    vizinhanca = []
+    for contador in range(agenda.totalTarefas):
+        novaAgenda = deepcopy(agenda)
+        moverTarefa(novaAgenda,contador)
+
+def moverTarefa(agenda,idTarefa):   
+    melhorCusto = calcularCustoAgenda(agenda)
+    melhorInicio = 0
+    melhorFim = 0     
+    for intervalo in range(len(agenda.intervalos)):
+        posTarefa = agenda.verificarHorario(intervalo,idTarefa)
+        if posTarefa != -1:
+            tarefa = agenda.intervalos[intervalo][posTarefa]
+            melhorInicio = intervalo
+            melhorFim = agenda.hashHora(tarefa.duracao) + melhorInicio
+    
+    agenda.removerTarefa(melhorInicio,melhorFim,idTarefa)
+    inicio = agenda.hashHora(tarefa.est)
+    inicioMax = agenda.hashHora(tarefa.lst)
+    fim = agenda.hashHora(tarefa.duracao) + inicio
+    continua = True
+    while inicio < inicioMax and continua:
+        if agenda.verificaIntervalo(inicio,fim,tarefa.recuperaTipo()):
+            agenda.alocarTarefa(inicio,fim,tarefa)
+            custoAgenda = calcularCustoAgenda(agenda)
+            if custoAgenda < melhorCusto:
+                melhorCusto = custoAgenda
+                melhorInicio = inicio
+                melhorFim = fim
+        else:
+            a = 
+            
+        
+    
+    
+    
+    
+            
 
 def main():
     model = Modelador()
