@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 11 22:26:54 2019
-
-@author: thiag
-"""
 from random          import randint
 import datetime
 from Tarefas         import Tarefa
 from Dispositivos    import Dispositivo
 from DispositivoHVAC import DispositivoHVAC
+from Entrada import DadosEntrada
+from Agenda import Agenda
 class Modelador():
     
     tiposIniciais = ["lavar-roupa","passar-roupa","secar-roupa","lavar-louça","jogar-truco"]
@@ -21,7 +18,7 @@ class Modelador():
                 horarios = self._gerarHorariosAleatorios(True)                
             else:
                 horarios = self._gerarHorariosAleatorios(False)
-            duracao = datetime.time(randint(1,3),0)
+            duracao = datetime.time(randint(1,4),0)
             tarefa = Tarefa(horarios.get("EST"),horarios.get("LST"),horarios.get("RST"),duracao)
             dispositivo = Dispositivo(self.tiposIniciais[randint(0,len(self.tiposIniciais)-1)],1)
             tarefa.definirDispositivo(dispositivo)
@@ -67,7 +64,7 @@ class Modelador():
         retorno.update({"RST":rst})        
         return retorno
     
-    def definirCustoAleatoriamente(self,arrayCusto):
+    def _definirCustoAleatoriamente(self,arrayCusto):
         contador = 0
         while contador < len(arrayCusto):
             intervalo = randint(1,5)
@@ -78,7 +75,22 @@ class Modelador():
                 else:
                     arrayCusto[contador] = valorIntervalo
                     contador = contador + 1
-            
+    
+    def _definirCustoFixo(self):
+        arrayCusto = [5,5,5,5,5,5,5,8,8,8,8,11,11,11,11,20,20,20,20,20,20,11,11,8]
+        return arrayCusto
+    
+    def gerarAgendaArquivo(self,pathArquivo):
+        entradaDados = DadosEntrada(pathArquivo)
+        tarefas      = entradaDados.lerArquivo()
+    
+        agenda = Agenda(60)
+        agenda.custos = self._definirCustoFixo()
+        #=======================================================================
+        # self._definirCustoFixo(agenda.custos)
+        #=======================================================================
+        agenda.agendar(tarefas)
+        return agenda
                 
         
         

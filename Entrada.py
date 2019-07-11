@@ -12,9 +12,12 @@ from Dispositivos    import Dispositivo
 from DispositivoHVAC import DispositivoHVAC
 
 class DadosEntrada():
+    pathArquivo = ""
+    def __init__(self,pathArquivo):
+        self.pathArquivo = pathArquivo
     
-    def lerArquivo(self,pathArquivo):
-        arquivo = open(pathArquivo, "r")
+    def lerArquivo(self):
+        arquivo = open(self.pathArquivo, "r")
         linhas  = arquivo.readlines()
         tarefas = []
         
@@ -33,7 +36,7 @@ class DadosEntrada():
         if dados[4] == "HVAC":
             dispositivo = DispositivoHVAC(dados[5], dados[6], dados[7], dados[8])
         else:
-            dispositivo = Dispositivo(dados[4], dados[5])
+            dispositivo = Dispositivo(dados[4], int(dados[5]))
             
         return dispositivo
     

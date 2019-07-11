@@ -1,5 +1,4 @@
-
-
+# -*- coding: utf-8 -*-
 class Tarefa():
     ID = 0
     est         = 0

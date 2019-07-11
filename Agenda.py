@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from random     import randint
 import datetime
 
@@ -35,7 +36,7 @@ class Agenda():
         
         if aloca:
             tarefa.start = start
-            tarefa.definirID = self.totalTarefas
+            tarefa.ID = self.totalTarefas
             self.alocarTarefa(posIni,posFim,tarefa) 
             self.totalTarefas += 1              
             return True
@@ -52,7 +53,7 @@ class Agenda():
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         tarefa.start = start
-                        tarefa.definirID = self.totalTarefas
+                        tarefa.ID = self.totalTarefas
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         self.totalTarefas += 1  
                         return True
@@ -66,7 +67,7 @@ class Agenda():
                     aloca = self.verificaIntervalo(novoIni,novoFim,tarefa.recuperaTipo())
                     if aloca:
                         tarefa.start = start
-                        tarefa.definirID = self.totalTarefas
+                        tarefa.ID = self.totalTarefas
                         self.alocarTarefa(novoIni,novoFim,tarefa)
                         self.totalTarefas += 1  
                         return True
@@ -91,19 +92,22 @@ class Agenda():
     def verificarHorario(self,intervalo,ID):
         posTarefa = 0
         for tarefa in self.intervalos[intervalo]:
-            if tarefa.ID == ID:
-                return posTarefa
-            else:
-                posTarefa += 1
+            if tarefa is not None:                    
+                if tarefa.ID == ID:
+                    return posTarefa
+                else:
+                    posTarefa += 1
         return -1
     
     def removerTarefa(self,inicio,fim,ID):
         for contador in range(inicio,fim+1):
             for tarefa in self.intervalos[contador]:
-                if tarefa.ID == ID:
-                    tarefaToDel = tarefa
-                    break
-            self.intervalos[contador].remove(tarefaToDel)
+                if tarefa is not None:                    
+                    if tarefa.ID == ID:
+                        self.intervalos[contador].remove(tarefa)
+                if len(self.intervalos[contador]) == 0 :
+                    self.intervalos[contador].append(None)
+            
         
     
     def alocarTarefa(self,inicio,fim,tarefa):
@@ -132,6 +136,12 @@ class Agenda():
             for j in range(len(self.intervalos[i])):
                     if self.intervalos[i][j] is not None:
                             print("Agenda[",i,"]","[",j,"] = ", self.intervalos[i][j].recuperaTipo())
+    
+    def imprimirCustos(self):
+        print(list(range(len(self.custos))))
+        print(self.custos)
+        
+            
 
                 
         
